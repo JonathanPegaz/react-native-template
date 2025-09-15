@@ -38,7 +38,7 @@ import { Pressable, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Path, Svg } from 'react-native-svg';
 
-import { Text } from './text';
+import { Text } from '../base/text';
 
 type ModalProps = BottomSheetModalProps & {
   title?: string;

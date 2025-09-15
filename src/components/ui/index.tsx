@@ -1,17 +1,29 @@
 import { cssInterop } from 'nativewind';
 import Svg from 'react-native-svg';
 
-export * from './button';
-export * from './checkbox';
+// Base components
+export * from './base/avatar';
+export * from './base/badge';
+export * from './base/button';
+export * from './base/card';
+export * from './base/checkbox';
+export * from './base/icon-button';
+export * from './base/image';
+export * from './base/input';
+export * from './base/select';
+export { CustomSwitch } from './base/switch';
+export * from './base/text';
+
+// Feedback components
+export * from './feedback/modal';
+export * from './feedback/progress-bar';
+
+// Layout components
+export * from './layout/list';
+
+// Utilities
 export { default as colors } from './colors';
 export * from './focus-aware-status-bar';
-export * from './image';
-export * from './input';
-export * from './list';
-export * from './modal';
-export * from './progress-bar';
-export * from './select';
-export * from './text';
 export * from './utils';
 
 // export base components from react-native

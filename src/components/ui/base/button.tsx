@@ -1,8 +1,15 @@
 import React from 'react';
 import type { PressableProps, View } from 'react-native';
-import { ActivityIndicator, Pressable, Text } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  View as RNView,
+} from 'react-native';
 import type { VariantProps } from 'tailwind-variants';
 import { tv } from 'tailwind-variants';
+
+import { cn } from '@/lib/cn';
 
 const button = tv({
   slots: {
@@ -38,10 +45,10 @@ const button = tv({
         label: 'text-black underline dark:text-white',
         indicator: 'text-black dark:text-white',
       },
-      link: {
-        container: 'bg-transparent',
-        label: 'text-black',
-        indicator: 'text-black',
+      danger: {
+        container: 'bg-red-500',
+        label: 'text-white',
+        indicator: 'text-white',
       },
     },
     size: {
@@ -90,6 +97,14 @@ interface Props extends ButtonVariants, Omit<PressableProps, 'disabled'> {
   loading?: boolean;
   className?: string;
   textClassName?: string;
+  /**
+   * Icon to display on the left side of the button
+   */
+  leftIcon?: React.ReactNode;
+  /**
+   * Icon to display on the right side of the button
+   */
+  rightIcon?: React.ReactNode;
 }
 
 export const Button = React.forwardRef<View, Props>(
@@ -103,6 +118,8 @@ export const Button = React.forwardRef<View, Props>(
       className = '',
       testID,
       textClassName = '',
+      leftIcon,
+      rightIcon,
       ...props
     },
     ref
@@ -131,12 +148,26 @@ export const Button = React.forwardRef<View, Props>(
                 testID={testID ? `${testID}-activity-indicator` : undefined}
               />
             ) : (
-              <Text
-                testID={testID ? `${testID}-label` : undefined}
-                className={styles.label({ className: textClassName })}
-              >
-                {text}
-              </Text>
+              <RNView className="flex-row items-center justify-center">
+                {leftIcon && (
+                  <RNView className={cn('mr-2', !text && 'mr-0')}>
+                    {leftIcon}
+                  </RNView>
+                )}
+                {text && (
+                  <Text
+                    testID={testID ? `${testID}-label` : undefined}
+                    className={styles.label({ className: textClassName })}
+                  >
+                    {text}
+                  </Text>
+                )}
+                {rightIcon && (
+                  <RNView className={cn('ml-2', !text && 'ml-0')}>
+                    {rightIcon}
+                  </RNView>
+                )}
+              </RNView>
             )}
           </>
         )}

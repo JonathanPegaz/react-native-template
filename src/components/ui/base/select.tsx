@@ -17,9 +17,8 @@ import { tv } from 'tailwind-variants';
 import colors from '@/components/ui/colors';
 import { CaretDown } from '@/components/ui/icons';
 
+import { Modal, useModal } from '../feedback/modal';
 import type { InputControllerType } from './input';
-import { useModal } from './modal';
-import { Modal } from './modal';
 import { Text } from './text';
 
 const selectTv = tv({
