@@ -15,10 +15,12 @@ export { CustomSwitch } from './base/switch';
 export * from './base/text';
 
 // Feedback components
+export * from './feedback';
 export * from './feedback/modal';
 export * from './feedback/progress-bar';
 
 // Layout components
+export * from './layout';
 export * from './layout/list';
 
 // Utilities

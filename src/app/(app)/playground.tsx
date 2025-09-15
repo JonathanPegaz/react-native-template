@@ -2,26 +2,53 @@
 import React from 'react';
 
 import {
+  Accordion,
+  Alert,
   Avatar,
   Badge,
   Button,
   Card,
+  Container,
   CustomSwitch,
+  Divider,
+  EmptyState,
+  HStack,
   IconButton,
+  LoadingOverlay,
   ScrollView,
+  Skeleton,
+  Tabs,
   Text,
+  ToastProvider,
+  useToast,
   View,
+  VStack,
 } from '@/components/ui';
 import colors from '@/components/ui/colors';
 import { Home } from '@/components/ui/icons';
 import { cn } from '@/lib/cn';
 import { tw } from '@/lib/design-tokens';
 
-export default function PlaygroundScreen() {
+function PlaygroundContent() {
   const [switchValue, setSwitchValue] = React.useState(false);
+  const [showLoading, setShowLoading] = React.useState(false);
+  const toast = useToast();
+
+  const showToast = () => {
+    toast.show({
+      title: 'Success!',
+      message: 'This is a toast notification',
+      variant: 'success',
+    });
+  };
+
+  const showLoadingOverlay = () => {
+    setShowLoading(true);
+    setTimeout(() => setShowLoading(false), 3000);
+  };
 
   return (
-    <View className="flex-1 bg-white dark:bg-black">
+    <Container className="flex-1 bg-white dark:bg-black">
       <ScrollView className="flex-1" contentContainerClassName="p-4">
         <Text className="mb-6 text-center text-2xl font-bold">
           UI Playground
@@ -253,9 +280,227 @@ export default function PlaygroundScreen() {
           <Text className="font-black">Black (900)</Text>
         </View>
 
+        {/* Section: Layout Components */}
+        <View className="mb-8">
+          <Text className="mb-4 text-lg font-semibold">Layout Components</Text>
+
+          <Text className="mb-2 text-sm font-medium">Stack (Vertical)</Text>
+          <VStack
+            gap="sm"
+            className="mb-4 rounded-lg bg-neutral-100 p-4 dark:bg-neutral-800"
+          >
+            <View className="h-8 rounded bg-blue-500" />
+            <View className="h-8 rounded bg-green-500" />
+            <View className="h-8 rounded bg-red-500" />
+          </VStack>
+
+          <Text className="mb-2 text-sm font-medium">Stack (Horizontal)</Text>
+          <HStack
+            gap="sm"
+            className="mb-4 rounded-lg bg-neutral-100 p-4 dark:bg-neutral-800"
+          >
+            <View className="size-8 rounded bg-blue-500" />
+            <View className="size-8 rounded bg-green-500" />
+            <View className="size-8 rounded bg-red-500" />
+          </HStack>
+
+          <Text className="mb-2 text-sm font-medium">Dividers</Text>
+          <VStack
+            gap="md"
+            className="rounded-lg bg-neutral-100 p-4 dark:bg-neutral-800"
+          >
+            <Text>Content above divider</Text>
+            <Divider />
+            <Text>Content below divider</Text>
+            <Divider label="OR" />
+            <Text>Content below labeled divider</Text>
+            <Divider variant="dashed" />
+            <Text>Content below dashed divider</Text>
+          </VStack>
+
+          <Text className="mb-2 mt-4 text-sm font-medium">Accordion</Text>
+          <Accordion
+            items={[
+              {
+                id: '1',
+                title: 'What is React Native?',
+                content: (
+                  <Text className="text-neutral-600 dark:text-neutral-400">
+                    React Native is a framework for building mobile applications
+                    using React and JavaScript.
+                  </Text>
+                ),
+                icon: <Text>📱</Text>,
+              },
+              {
+                id: '2',
+                title: 'How does it work?',
+                content: (
+                  <VStack gap="sm">
+                    <Text className="text-neutral-600 dark:text-neutral-400">
+                      React Native uses native components instead of web
+                      components as building blocks.
+                    </Text>
+                    <Button label="Learn More" size="sm" />
+                  </VStack>
+                ),
+                icon: <Text>⚙️</Text>,
+              },
+              {
+                id: '3',
+                title: 'Disabled Item',
+                content: <Text>This content should not be visible</Text>,
+                disabled: true,
+                icon: <Text>🚫</Text>,
+              },
+            ]}
+            defaultOpen={['1']}
+            className="mb-4"
+          />
+
+          <Text className="mb-2 text-sm font-medium">Tabs</Text>
+          <Tabs
+            tabs={[
+              {
+                id: 'overview',
+                label: 'Overview',
+                content: (
+                  <VStack gap="md">
+                    <Text className="text-lg font-semibold">
+                      Project Overview
+                    </Text>
+                    <Text className="text-neutral-600 dark:text-neutral-400">
+                      This is the overview tab content with some information
+                      about the project.
+                    </Text>
+                    <Button label="Get Started" />
+                  </VStack>
+                ),
+                icon: <Text>📊</Text>,
+              },
+              {
+                id: 'components',
+                label: 'Components',
+                content: (
+                  <VStack gap="sm">
+                    <Text className="text-lg font-semibold">UI Components</Text>
+                    <Text className="text-neutral-600 dark:text-neutral-400">
+                      Browse through our collection of reusable UI components.
+                    </Text>
+                    <HStack gap="sm">
+                      <Badge label="Button" variant="outline" />
+                      <Badge label="Input" variant="outline" />
+                      <Badge label="Modal" variant="outline" />
+                    </HStack>
+                  </VStack>
+                ),
+                icon: <Text>🧩</Text>,
+                badge: '12',
+              },
+              {
+                id: 'api',
+                label: 'API',
+                content: (
+                  <VStack gap="md">
+                    <Text className="text-lg font-semibold">API Reference</Text>
+                    <Text className="text-neutral-600 dark:text-neutral-400">
+                      Documentation for all available props and methods.
+                    </Text>
+                    <Alert
+                      description="API documentation is still being updated"
+                      variant="warning"
+                    />
+                  </VStack>
+                ),
+                icon: <Text>📚</Text>,
+              },
+              {
+                id: 'settings',
+                label: 'Settings',
+                content: (
+                  <Text className="text-neutral-600 dark:text-neutral-400">
+                    Settings content here...
+                  </Text>
+                ),
+                disabled: true,
+              },
+            ]}
+            defaultValue="overview"
+            swipeable
+          />
+        </View>
+
+        {/* Section: Feedback Components */}
+        <View className="mb-8">
+          <Text className="mb-4 text-lg font-semibold">
+            Feedback Components
+          </Text>
+
+          <VStack gap="md">
+            <Button label="Show Toast" onPress={showToast} />
+            <Button label="Show Loading Overlay" onPress={showLoadingOverlay} />
+          </VStack>
+
+          <Divider className="my-4" />
+
+          <Text className="mb-2 text-sm font-medium">Alerts</Text>
+          <VStack gap="sm" className="mb-4">
+            <Alert description="This is an info alert" variant="info" />
+            <Alert description="This is a success alert" variant="success" />
+            <Alert description="This is a warning alert" variant="warning" />
+            <Alert
+              title="Error Alert"
+              description="This is an error alert with a title"
+              variant="error"
+              dismissible
+              onDismiss={() => {}}
+            />
+          </VStack>
+
+          <Text className="mb-2 text-sm font-medium">Skeletons</Text>
+          <VStack gap="sm" className="mb-4">
+            <Skeleton variant="text" />
+            <Skeleton variant="heading" />
+            <HStack gap="sm" align="center">
+              <Skeleton variant="avatar" size="md" />
+              <VStack gap="xs" flex="1">
+                <Skeleton variant="text" width="80%" />
+                <Skeleton variant="text" width="60%" />
+              </VStack>
+            </HStack>
+            <Skeleton variant="card" />
+          </VStack>
+
+          <Text className="mb-2 text-sm font-medium">Empty State</Text>
+          <EmptyState
+            icon="📭"
+            title="No items found"
+            description="There are no items to display at the moment"
+            action={{
+              label: 'Add Item',
+              onPress: () => {},
+            }}
+            variant="card"
+          />
+        </View>
+
         {/* Add some padding at the bottom */}
         <View className="h-20" />
       </ScrollView>
-    </View>
+
+      <LoadingOverlay
+        visible={showLoading}
+        message="Loading..."
+        subtitle="Please wait while we process your request"
+      />
+    </Container>
+  );
+}
+
+export default function PlaygroundScreen() {
+  return (
+    <ToastProvider>
+      <PlaygroundContent />
+    </ToastProvider>
   );
 }
